@@ -1,0 +1,14 @@
+version: '2'
+services:
+    test_react-app:
+        image: test_react
+        environment:
+            - SPRING_PROFILES_ACTIVE=prod,swagger
+            - SPRING_DATASOURCE_URL=jdbc:mysql://test_react-mysql:3306/test_react?useUnicode=true&characterEncoding=utf8&useSSL=false
+            - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+        ports:
+            - 8080:8080
+    test_react-mysql:
+        extends:
+            file: mysql.yml
+            service: test_react-mysql
