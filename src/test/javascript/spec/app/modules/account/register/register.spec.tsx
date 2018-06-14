@@ -1,8 +1,7 @@
 /* import * as React from 'react';
 import { shallow } from 'enzyme';
 import axios from 'axios';
-import { expect } from 'chai';
-import configureStore from 'redux-mock-store';
+import * as configureStore from 'redux-mock-store';
 import { spy, sandbox } from 'sinon';
 
 import { RegisterPage } from 'app/modules/account/register/register';
@@ -65,7 +64,7 @@ describe.only('RegisterComponent', () => {
       register.find('#register-submit').simulate('click');
 
       // Both should be false since you can't submit an invalid form.
-      expect(handleRegisterSpy.called).to.equals(false);
+      expect(handleRegisterSpy.called).toEquals(false);
     });
 
     it('should update registration success to true after creating an account', async () => {
@@ -76,9 +75,9 @@ describe.only('RegisterComponent', () => {
 
       register.find('#register-submit').simulate('click');
 
-      expect(handleRegisterSpy.called).to.equals(true);
-      // expect(register.props().registrationSuccess).to.equal(true);
-      // expect(register.props().registrationFailure).to.equal(false);
+      expect(handleRegisterSpy.called).toEquals(true);
+      // expect(register.props().registrationSuccess).toEqual(true);
+      // expect(register.props().registrationFailure).toEqual(false);
     });
 
     it('should notify of user existence upon 400/login already in use', () => {
@@ -98,9 +97,9 @@ describe.only('RegisterComponent', () => {
 
       register.dive().find('#register-submit').simulate('click');
 
-      expect(register.props().registrationSuccess).to.be.equals(false);
-      expect(register.props().registrationFailure).to.be.equals(true);
-      expect(register.props().errorMessage).to.be.equals('userexists');
+      expect(register.props().registrationSuccess).be.toEquals(false);
+      expect(register.props().registrationFailure).be.toEquals(true);
+      expect(register.props().errorMessage).be.toEquals('userexists');
     });
 
     it('should notify of email existence upon 400/email address already in use', () => {
@@ -120,9 +119,9 @@ describe.only('RegisterComponent', () => {
 
       register.dive().find('#register-submit').simulate('click');
 
-      expect(register.props().registrationSuccess).to.be.equals(false);
-      expect(register.props().registrationFailure).to.be.equals(true);
-      expect(register.props().errorMessage).to.be.equals('emailexists');
+      expect(register.props().registrationSuccess).be.toEquals(false);
+      expect(register.props().registrationFailure).be.toEquals(true);
+      expect(register.props().errorMessage).be.toEquals('emailexists');
     });
 
     it('should notify of generic error', () => {
@@ -134,9 +133,9 @@ describe.only('RegisterComponent', () => {
 
       register.dive().find('#register-submit').simulate('click');
 
-      expect(register.props().registrationSuccess).to.be.equals(false);
-      expect(register.props().registrationFailure).to.be.equals(true);
-      expect(register.props().errorMessage).to.be.equals(undefined);
+      expect(register.props().registrationSuccess).be.toEquals(false);
+      expect(register.props().registrationFailure).be.toEquals(true);
+      expect(register.props().errorMessage).be.toEquals(undefined);
     });
 
   });

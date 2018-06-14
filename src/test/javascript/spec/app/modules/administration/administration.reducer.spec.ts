@@ -1,5 +1,4 @@
-import { expect } from 'chai';
-import configureStore from 'redux-mock-store';
+import * as configureStore from 'redux-mock-store';
 import promiseMiddleware from 'redux-promise-middleware';
 import axios from 'axios';
 import thunk from 'redux-thunk';
@@ -29,11 +28,13 @@ describe('Administration reducer tests', () => {
   }
 
   function testInitialState(state) {
-    expect(state).to.contain({
-      loading: false,
-      errorMessage: null,
-      totalItems: 0
-    });
+    expect(state).toEqual(
+      expect.objectContaining({
+        loading: false,
+        errorMessage: null,
+        totalItems: 0
+      })
+    );
     expect(isEmpty(state.gateway.routes));
     expect(isEmpty(state.logs.loggers));
     expect(isEmpty(state.threadDump));
@@ -67,10 +68,12 @@ describe('Administration reducer tests', () => {
         ],
         {},
         state => {
-          expect(state).to.contain({
-            errorMessage: null,
-            loading: true
-          });
+          expect(state).toEqual(
+            expect.objectContaining({
+              errorMessage: null,
+              loading: true
+            })
+          );
         }
       );
     });
@@ -91,10 +94,12 @@ describe('Administration reducer tests', () => {
         ],
         'something happened',
         state => {
-          expect(state).to.contain({
-            loading: false,
-            errorMessage: 'something happened'
-          });
+          expect(state).toEqual(
+            expect.objectContaining({
+              loading: false,
+              errorMessage: 'something happened'
+            })
+          );
         }
       );
     });
@@ -105,76 +110,90 @@ describe('Administration reducer tests', () => {
       const payload = { data: [] };
       const toTest = administration(undefined, { type: SUCCESS(ACTION_TYPES.FETCH_GATEWAY_ROUTE), payload });
 
-      expect(toTest).to.deep.include({
-        loading: false,
-        gateway: { routes: payload.data }
-      });
+      expect(toTest).toEqual(
+        expect.objectContaining({
+          loading: false,
+          gateway: { routes: payload.data }
+        })
+      );
     });
 
     it('should update state according to a successful fetch logs request', () => {
       const payload = { data: [{ name: 'ROOT', level: 'DEBUG' }] };
       const toTest = administration(undefined, { type: SUCCESS(ACTION_TYPES.FETCH_LOGS), payload });
 
-      expect(toTest).to.deep.include({
-        loading: false,
-        logs: { loggers: payload.data }
-      });
+      expect(toTest).toEqual(
+        expect.objectContaining({
+          loading: false,
+          logs: { loggers: payload.data }
+        })
+      );
     });
 
     it('should update state according to a successful fetch health request', () => {
       const payload = { data: { status: 'UP' } };
       const toTest = administration(undefined, { type: SUCCESS(ACTION_TYPES.FETCH_HEALTH), payload });
 
-      expect(toTest).to.deep.include({
-        loading: false,
-        health: payload.data
-      });
+      expect(toTest).toEqual(
+        expect.objectContaining({
+          loading: false,
+          health: payload.data
+        })
+      );
     });
 
     it('should update state according to a successful fetch metrics request', () => {
       const payload = { data: { version: '3.1.3', gauges: {} } };
       const toTest = administration(undefined, { type: SUCCESS(ACTION_TYPES.FETCH_METRICS), payload });
 
-      expect(toTest).to.deep.include({
-        loading: false,
-        metrics: payload.data
-      });
+      expect(toTest).toEqual(
+        expect.objectContaining({
+          loading: false,
+          metrics: payload.data
+        })
+      );
     });
 
     it('should update state according to a successful fetch thread dump request', () => {
       const payload = { data: [{ threadName: 'hz.gateway.cached.thread-6', threadId: 9266 }] };
       const toTest = administration(undefined, { type: SUCCESS(ACTION_TYPES.FETCH_THREAD_DUMP), payload });
 
-      expect(toTest).to.deep.include({
-        loading: false,
-        threadDump: payload.data
-      });
+      expect(toTest).toEqual(
+        expect.objectContaining({
+          loading: false,
+          threadDump: payload.data
+        })
+      );
     });
 
     it('should update state according to a successful fetch configurations request', () => {
       const payload = { data: { contexts: { jhipster: { beans: {} } } } };
       const toTest = administration(undefined, { type: SUCCESS(ACTION_TYPES.FETCH_CONFIGURATIONS), payload });
 
-      expect(toTest).to.deep.include({
-        loading: false,
-        configuration: {
-          configProps: payload.data,
-          env: {}
-        }
-      });
+      expect(toTest).toEqual(
+        expect.objectContaining({
+          loading: false,
+          configuration: {
+            configProps: payload.data,
+            env: {}
+          }
+        })
+      );
     });
 
     it('should update state according to a successful fetch env request', () => {
       const payload = { data: { activeProfiles: ['swagger', 'dev'] } };
       const toTest = administration(undefined, { type: SUCCESS(ACTION_TYPES.FETCH_ENV), payload });
 
-      expect(toTest).to.deep.include({
-        loading: false,
-        configuration: {
-          configProps: {},
-          env: payload.data
-        }
-      });
+      expect(toTest).toEqual(
+        expect.objectContaining({
+          loading: false,
+          configuration: {
+            configProps: {},
+            env: payload.data
+          }
+        })
+      );
     });
 
     it('should update state according to a successful fetch audits request', () => {
@@ -182,11 +201,13 @@ describe('Administration reducer tests', () => {
       const payload = { data: [{ id: 1, userLogin: 'admin' }], headers };
       const toTest = administration(undefined, { type: SUCCESS(ACTION_TYPES.FETCH_AUDITS), payload });
 
-      expect(toTest).to.contain({
-        loading: false,
-        audits: payload.data,
-        totalItems: headers['x-total-count']
-      });
+      expect(toTest).toEqual(
+        expect.objectContaining({
+          loading: false,
+          audits: payload.data,
+          totalItems: headers['x-total-count']
+        })
+      );
     });
   });
   describe('Actions', () => {
@@ -209,7 +230,7 @@ describe('Administration reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(gatewayRoutes()).then(() => expect(store.getActions()).to.eql(expectedActions));
+      await store.dispatch(gatewayRoutes()).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
     it('dispatches FETCH_HEALTH_PENDING and FETCH_HEALTH_FULFILLED actions', async () => {
       const expectedActions = [
@@ -221,7 +242,7 @@ describe('Administration reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(systemHealth()).then(() => expect(store.getActions()).to.eql(expectedActions));
+      await store.dispatch(systemHealth()).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
     it('dispatches FETCH_METRICS_PENDING and FETCH_METRICS_FULFILLED actions', async () => {
       const expectedActions = [
@@ -233,7 +254,7 @@ describe('Administration reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(systemMetrics()).then(() => expect(store.getActions()).to.eql(expectedActions));
+      await store.dispatch(systemMetrics()).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
     it('dispatches FETCH_THREAD_DUMP_PENDING and FETCH_THREAD_DUMP_FULFILLED actions', async () => {
       const expectedActions = [
@@ -245,7 +266,7 @@ describe('Administration reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(systemThreadDump()).then(() => expect(store.getActions()).to.eql(expectedActions));
+      await store.dispatch(systemThreadDump()).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
     it('dispatches FETCH_LOGS_PENDING and FETCH_LOGS_FULFILLED actions', async () => {
       const expectedActions = [
@@ -257,7 +278,7 @@ describe('Administration reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(getLoggers()).then(() => expect(store.getActions()).to.eql(expectedActions));
+      await store.dispatch(getLoggers()).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
     it('dispatches FETCH_LOGS_CHANGE_LEVEL_PENDING and FETCH_LOGS_CHANGE_LEVEL_FULFILLED actions', async () => {
       const expectedActions = [
@@ -276,7 +297,7 @@ describe('Administration reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(changeLogLevel('ROOT', 'DEBUG')).then(() => expect(store.getActions()).to.deep.equal(expectedActions));
+      await store.dispatch(changeLogLevel('ROOT', 'DEBUG')).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
     it('dispatches FETCH_CONFIGURATIONS_PENDING and FETCH_CONFIGURATIONS_FULFILLED actions', async () => {
       const expectedActions = [
@@ -288,7 +309,7 @@ describe('Administration reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(getConfigurations()).then(() => expect(store.getActions()).to.eql(expectedActions));
+      await store.dispatch(getConfigurations()).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
     it('dispatches FETCH_ENV_PENDING and FETCH_ENV_FULFILLED actions', async () => {
       const expectedActions = [
@@ -300,7 +321,7 @@ describe('Administration reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(getEnv()).then(() => expect(store.getActions()).to.eql(expectedActions));
+      await store.dispatch(getEnv()).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
     it('dispatches FETCH_AUDITS_PENDING and FETCH_AUDITS_FULFILLED actions with pagination variables - no sort', async () => {
       const expectedActions = [
@@ -312,7 +333,7 @@ describe('Administration reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(getAudits(1, 10, null, Date.now(), Date.now())).then(() => expect(store.getActions()).to.eql(expectedActions));
+      await store.dispatch(getAudits(1, 10, null, Date.now(), Date.now())).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
     it('dispatches FETCH_AUDITS_PENDING and FETCH_AUDITS_FULFILLED actions with pagination variables - no dates', async () => {
       const expectedActions = [
@@ -324,7 +345,7 @@ describe('Administration reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(getAudits(1, 10, 'id,desc', null, null)).then(() => expect(store.getActions()).to.eql(expectedActions));
+      await store.dispatch(getAudits(1, 10, 'id,desc', null, null)).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
   });
 });

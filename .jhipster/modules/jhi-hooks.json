@@ -1,0 +1,10 @@
+[
+    {
+        "name": "Jest generator",
+        "npmPackageName": "generator-jhipster-jest",
+        "description": "replace karma test stack with jest",
+        "hookFor": "entity",
+        "hookType": "post",
+        "generatorCallback": "jhipster-jest:app"
+    }
+]

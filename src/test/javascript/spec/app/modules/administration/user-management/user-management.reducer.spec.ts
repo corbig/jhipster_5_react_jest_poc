@@ -1,5 +1,4 @@
-import { expect } from 'chai';
-import configureStore from 'redux-mock-store';
+import * as configureStore from 'redux-mock-store';
 import promiseMiddleware from 'redux-promise-middleware';
 import axios from 'axios';
 import thunk from 'redux-thunk';
@@ -26,13 +25,15 @@ describe('User management reducer tests', () => {
   }
 
   function testInitialState(state) {
-    expect(state).to.contain({
-      loading: false,
-      errorMessage: null,
-      updating: false,
-      updateSuccess: false,
-      totalItems: 0
-    });
+    expect(state).toEqual(
+      expect.objectContaining({
+        loading: false,
+        errorMessage: null,
+        updating: false,
+        updateSuccess: false,
+        totalItems: 0
+      })
+    );
     expect(isEmpty(state.users));
     expect(isEmpty(state.authorities));
     expect(isEmpty(state.user));
@@ -57,11 +58,13 @@ describe('User management reducer tests', () => {
 
     it('should set state to loading', () => {
       testMultipleTypes([REQUEST(ACTION_TYPES.FETCH_USERS), REQUEST(ACTION_TYPES.FETCH_USER)], {}, state => {
-        expect(state).to.contain({
-          errorMessage: null,
-          updateSuccess: false,
-          loading: true
-        });
+        expect(state).toEqual(
+          expect.objectContaining({
+            errorMessage: null,
+            updateSuccess: false,
+            loading: true
+          })
+        );
       });
     });
 
@@ -70,11 +73,13 @@ describe('User management reducer tests', () => {
         [REQUEST(ACTION_TYPES.CREATE_USER), REQUEST(ACTION_TYPES.UPDATE_USER), REQUEST(ACTION_TYPES.DELETE_USER)],
         {},
         state => {
-          expect(state).to.contain({
-            errorMessage: null,
-            updateSuccess: false,
-            updating: true
-          });
+          expect(state).toEqual(
+            expect.objectContaining({
+              errorMessage: null,
+              updateSuccess: false,
+              updating: true
+            })
+          );
         }
       );
     });
@@ -93,12 +98,14 @@ describe('User management reducer tests', () => {
         ],
         'something happened',
         state => {
-          expect(state).to.contain({
-            loading: false,
-            updating: false,
-            updateSuccess: false,
-            errorMessage: 'something happened'
-          });
+          expect(state).toEqual(
+            expect.objectContaining({
+              loading: false,
+              updating: false,
+              updateSuccess: false,
+              errorMessage: 'something happened'
+            })
+          );
         }
       );
     });
@@ -110,50 +117,60 @@ describe('User management reducer tests', () => {
       const payload = { data: 'some handsome users', headers };
       const toTest = userManagement(undefined, { type: SUCCESS(ACTION_TYPES.FETCH_USERS), payload });
 
-      expect(toTest).to.contain({
-        loading: false,
-        users: payload.data,
-        totalItems: headers['x-total-count']
-      });
+      expect(toTest).toEqual(
+        expect.objectContaining({
+          loading: false,
+          users: payload.data,
+          totalItems: headers['x-total-count']
+        })
+      );
     });
 
     it('should update state according to a successful fetch user request', () => {
       const payload = { data: 'some handsome user' };
       const toTest = userManagement(undefined, { type: SUCCESS(ACTION_TYPES.FETCH_USER), payload });
 
-      expect(toTest).to.contain({
-        loading: false,
-        user: payload.data
-      });
+      expect(toTest).toEqual(
+        expect.objectContaining({
+          loading: false,
+          user: payload.data
+        })
+      );
     });
 
     it('should update state according to a successful fetch role request', () => {
       const payload = { data: ['ROLE_ADMIN'] };
       const toTest = userManagement(undefined, { type: SUCCESS(ACTION_TYPES.FETCH_ROLES), payload });
 
-      expect(toTest).to.contain({
-        loading: false,
-        authorities: payload.data
-      });
+      expect(toTest).toEqual(
+        expect.objectContaining({
+          loading: false,
+          authorities: payload.data
+        })
+      );
     });
 
     it('should set state to successful update', () => {
       testMultipleTypes([SUCCESS(ACTION_TYPES.CREATE_USER), SUCCESS(ACTION_TYPES.UPDATE_USER)], { data: 'some handsome user' }, types => {
-        expect(types).to.contain({
-          updating: false,
-          updateSuccess: true,
-          user: 'some handsome user'
-        });
+        expect(types).toEqual(
+          expect.objectContaining({
+            updating: false,
+            updateSuccess: true,
+            user: 'some handsome user'
+          })
+        );
       });
     });
 
     it('should set state to successful update with an empty user', () => {
       const toTest = userManagement(undefined, { type: SUCCESS(ACTION_TYPES.DELETE_USER) });
 
-      expect(toTest).to.contain({
-        updating: false,
-        updateSuccess: true
-      });
+      expect(toTest).toEqual(
+        expect.objectContaining({
+          updating: false,
+          updateSuccess: true
+        })
+      );
       expect(isEmpty(toTest.user));
     });
   });
@@ -181,7 +198,7 @@ describe('User management reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(getUsers()).then(() => expect(store.getActions()).to.eql(expectedActions));
+      await store.dispatch(getUsers()).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
     it('dispatches FETCH_USERS_PENDING and FETCH_USERS_FULFILLED actions with pagination options', async () => {
       const expectedActions = [
@@ -193,7 +210,7 @@ describe('User management reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(getUsers(1, 20, 'id,desc')).then(() => expect(store.getActions()).to.eql(expectedActions));
+      await store.dispatch(getUsers(1, 20, 'id,desc')).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
     it('dispatches FETCH_ROLES_PENDING and FETCH_ROLES_FULFILLED actions', async () => {
       const expectedActions = [
@@ -205,7 +222,7 @@ describe('User management reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(getRoles('admin')).then(() => expect(store.getActions()).to.eql(expectedActions));
+      await store.dispatch(getRoles('admin')).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
     it('dispatches FETCH_USER_PENDING and FETCH_USER_FULFILLED actions', async () => {
       const expectedActions = [
@@ -217,7 +234,7 @@ describe('User management reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(getUser('admin')).then(() => expect(store.getActions()).to.eql(expectedActions));
+      await store.dispatch(getUser('admin')).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
     it('dispatches CREATE_USER_PENDING and CREATE_USER_FULFILLED actions', async () => {
       const expectedActions = [
@@ -236,7 +253,7 @@ describe('User management reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(createUser()).then(() => expect(store.getActions()).to.eql(expectedActions));
+      await store.dispatch(createUser()).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
     it('dispatches UPDATE_USER_PENDING and UPDATE_USER_FULFILLED actions', async () => {
       const expectedActions = [
@@ -255,7 +272,7 @@ describe('User management reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(updateUser({ login: 'admin' })).then(() => expect(store.getActions()).to.eql(expectedActions));
+      await store.dispatch(updateUser({ login: 'admin' })).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
     it('dispatches DELETE_USER_PENDING and DELETE_USER_FULFILLED actions', async () => {
       const expectedActions = [
@@ -274,7 +291,7 @@ describe('User management reducer tests', () => {
           payload: resolvedObject
         }
       ];
-      await store.dispatch(deleteUser('admin')).then(() => expect(store.getActions()).to.deep.equal(expectedActions));
+      await store.dispatch(deleteUser('admin')).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
   });
 });

@@ -1,4 +1,6 @@
-# test_react
+# Jhipster_5_React_Jest_POC
+## This project is a POC of Karma to Jest migration based on a dedicated Jhipster module (not available publicly at the moment).
+
 This application was generated using JHipster 5.0.0-beta.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v5.0.0-beta.0](https://www.jhipster.tech/documentation-archive/v5.0.0-beta.0).
 
 ## Development
